@@ -20,6 +20,12 @@
       box-sizing: border-box;
       margin-bottom: 20px;
     }
+    .common {
+      padding-top: 10px;
+    }
+    label {
+      font-weight: bold;
+    }
     .calculator label {
       display: block;
       margin-top: 10px;
@@ -44,41 +50,55 @@
 </head>
 <body>
   <h1>House Investment Comparison Calculator</h1>
+
+  <h3>Common values:</h3>
+  <div class="common"> 
+    <label>Mortgage Annual Interest Rate (%):</label>
+    <input type="number" id="rate" placeholder="e.g., 4" value="7" step="0.1">
+  <div> 
+  <div class="common"> 
+    <label>Mortgage Term (years):</label>
+    <input type="number" id="term" placeholder="e.g., 30" value="30">
+  </div>  
+  <div class="common"> 
+    <label>Property tax yearly (%):</label>
+    <input type="number" id="tax" placeholder="e.g., 1.5" value="1.05" step="0.1">
+  </div>
+  <div class="common"> 
+    <label>Vacancy/Turnover Loss (%):</label>
+    <input type="number" id="vac" placeholder="e.g., 10" value="5">
+  </div>
+  <div class="common"> 
+    <label>Property Appreciation Rate (% per year):</label>
+    <input type="number" id="appreciation" placeholder="e.g., 2" value="3">
+  </div>
+  <div class="common"> 
+    <label>Rental Period (years):</label>
+    <input type="number" id="rentalYears" placeholder="e.g., 30" value="1">
+  </div>
+  <div class="common"> 
+    <label>Mortgage closing costs (%):</label>
+    <input type="number" id="mortgage-closing-costs" placeholder="e.g., 2.3" value="4.3" step="0.1">
+  </div>  
+  <br>
+
   <div class="container">
     <div class="calculator" id="calc1">
       <h2>House 1</h2>
       <label>House Price:</label>
-      <input type="number" id="price1" autocomplete="on" placeholder="e.g., 300000">
+      <input type="number" id="price1" placeholder="e.g., 300000">
       
       <label>Down Payment:</label>
       <input type="number" id="down1" placeholder="e.g., 60000">
-      
-      <label>Mortgage Annual Interest Rate (%):</label>
-      <input type="number" id="rate1" placeholder="e.g., 4">
-      
-      <label>Mortgage Term (years):</label>
-      <input type="number" id="term1" placeholder="e.g., 30">
-      
-      <label>Sales Tax (%):</label>
-      <input type="number" id="tax1" placeholder="e.g., 1.5">
-      
+
       <label>HOA per Month:</label>
       <input type="number" id="hoa1" placeholder="e.g., 200">
       
       <label>Insurance per Month:</label>
       <input type="number" id="ins1" placeholder="e.g., 100">
       
-      <label>Vacancy/Turnover Loss (%):</label>
-      <input type="number" id="vac1" placeholder="e.g., 10">
-      
       <label>Monthly Rent:</label>
       <input type="number" id="rent1" placeholder="e.g., 1500">
-      
-      <label>Property Appreciation Rate (% per year):</label>
-      <input type="number" id="appreciation1" placeholder="e.g., 2">
-      
-      <label>Rental Period (years):</label>
-      <input type="number" id="rentalYears1" placeholder="e.g., 30">
       
       <button onclick="calculateCalculator('1')">Calculate</button>
       <div class="result" id="result1"></div>
@@ -92,32 +112,14 @@
       <label>Down Payment:</label>
       <input type="number" id="down2" placeholder="e.g., 70000">
       
-      <label>Mortgage Annual Interest Rate (%):</label>
-      <input type="number" id="rate2" placeholder="e.g., 4.5">
-      
-      <label>Mortgage Term (years):</label>
-      <input type="number" id="term2" placeholder="e.g., 30">
-      
-      <label>Sales Tax (%):</label>
-      <input type="number" id="tax2" placeholder="e.g., 1.5">
-      
       <label>HOA per Month:</label>
       <input type="number" id="hoa2" placeholder="e.g., 250">
       
       <label>Insurance per Month:</label>
       <input type="number" id="ins2" placeholder="e.g., 120">
       
-      <label>Vacancy/Turnover Loss (%):</label>
-      <input type="number" id="vac2" placeholder="e.g., 10">
-      
       <label>Monthly Rent:</label>
       <input type="number" id="rent2" placeholder="e.g., 1600">
-      
-      <label>Property Appreciation Rate (% per year):</label>
-      <input type="number" id="appreciation2" placeholder="e.g., 2">
-      
-      <label>Rental Period (years):</label>
-      <input type="number" id="rentalYears2" placeholder="e.g., 30">
       
       <button onclick="calculateCalculator('2')">Calculate</button>
       <div class="result" id="result2"></div>
@@ -143,19 +145,23 @@
     };
 
     function calculateCalculator(id) {
+      // Get common values
+      var rate = parseFloat(document.getElementById('rate').value);
+      var term = parseFloat(document.getElementById('term').value);
+      var tax = parseFloat(document.getElementById('tax').value);
+      var vac = parseFloat(document.getElementById('vac').value);
+      var appreciation = parseFloat(document.getElementById('appreciation').value);
+      var rentalYears = parseFloat(document.getElementById('rentalYears').value);
+      var mortgageClosingCostsPers = parseFloat(document.getElementById('mortgage-closing-costs').value);
+
       // Get input values for calculator (either "1" or "2")
       var price = parseFloat(document.getElementById('price' + id).value);
       var down = parseFloat(document.getElementById('down' + id).value);
-      var rate = parseFloat(document.getElementById('rate' + id).value);
-      var term = parseFloat(document.getElementById('term' + id).value);
-      var tax = parseFloat(document.getElementById('tax' + id).value);
       var hoa = parseFloat(document.getElementById('hoa' + id).value);
       var ins = parseFloat(document.getElementById('ins' + id).value);
-      var vac = parseFloat(document.getElementById('vac' + id).value);
       var rent = parseFloat(document.getElementById('rent' + id).value);
-      var appreciation = parseFloat(document.getElementById('appreciation' + id).value);
-      var rentalYears = parseFloat(document.getElementById('rentalYears' + id).value);
       
+
       // Validate inputs
       if(isNaN(price) || isNaN(down) || isNaN(rate) || isNaN(term) || isNaN(tax) ||
          isNaN(hoa) || isNaN(ins) || isNaN(vac) || isNaN(rent) || isNaN(appreciation) || isNaN(rentalYears)){
@@ -192,6 +198,8 @@
       var initialInvestment = down + salesTaxCost;
       var roi = (totalProfit / initialInvestment) * 100;
       
+      var mortgageClosingCosts = mortgageClosingCostsPers / 100 * loan;
+
       // Save results globally for comparison
       window['calcResult' + id] = {
         mortgagePayment: mortgagePayment,
@@ -211,6 +219,10 @@
         "<strong>HOA (Monthly):</strong> $" + hoa.toFixed(2) + "<br>" +
         "<strong>insurance (Monthly):</strong> $" + ins.toFixed(2) + "<br>" +
         "<strong>Sales tax (Monthly):</strong> $" + salesTaxCostPerMonth.toFixed(2) + "<br><br>" +
+
+        "<strong>Mortgage closing costs (one time):</strong> $" + mortgageClosingCosts.toFixed(2) + "<br><br>" +
+
+
         "<strong>Rental Profit (Over Period):</strong> $" + rentalProfit.toFixed(2) + "<br>" +
         "<strong>Equity Gain:</strong> $" + equityGain.toFixed(2) + "<br>" +
         "<strong>Total Profit:</strong> $" + totalProfit.toFixed(2) + "<br>" +
@@ -228,17 +240,17 @@
       var compareText = "";
       
       if(res1.totalProfit > res2.totalProfit) {
-        compareText += "House 1 has a higher total profit.<br>";
+        compareText += "House 1 has a higher total profit, diff: "+ (res1.totalProfit - res2.totalProfit).toFixed(2) +"$.<br>";
       } else if(res1.totalProfit < res2.totalProfit) {
-        compareText += "House 2 has a higher total profit.<br>";
+        compareText += "House 2 has a higher total profit, diff: "+ (res2.totalProfit - res1.totalProfit).toFixed(2) +"$.<br>";
       } else {
         compareText += "Both houses have the same total profit.<br>";
       }
       
       if(res1.roi > res2.roi) {
-        compareText += "House 1 has a higher ROI.<br>";
+        compareText += "House 1 has a higher ROI, diff: "+ (res1.roi - res2.roi).toFixed(2) +"%.<br>";
       } else if(res1.roi < res2.roi) {
-        compareText += "House 2 has a higher ROI.<br>";
+        compareText += "House 2 has a higher ROI, diff: "+ (res2.roi - res1.roi).toFixed(2) +"%.<br>";
       } else {
         compareText += "Both houses have the same ROI.<br>";
       }
