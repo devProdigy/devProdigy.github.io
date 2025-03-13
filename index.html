@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>House Investment Comparison Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .calculator {
+      border: 1px solid #ccc;
+      padding: 20px;
+      width: 48%;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+    .calculator label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .calculator input {
+      width: 100%;
+      padding: 5px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f4f4f4;
+    }
+    button {
+      padding: 10px 15px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>House Investment Comparison Calculator</h1>
+  <div class="container">
+    <div class="calculator" id="calc1">
+      <h2>House 1</h2>
+      <label>House Price:</label>
+      <input type="number" id="price1" autocomplete="on" placeholder="e.g., 300000">
+      
+      <label>Down Payment:</label>
+      <input type="number" id="down1" placeholder="e.g., 60000">
+      
+      <label>Mortgage Annual Interest Rate (%):</label>
+      <input type="number" id="rate1" placeholder="e.g., 4">
+      
+      <label>Mortgage Term (years):</label>
+      <input type="number" id="term1" placeholder="e.g., 30">
+      
+      <label>Sales Tax (%):</label>
+      <input type="number" id="tax1" placeholder="e.g., 1.5">
+      
+      <label>HOA per Month:</label>
+      <input type="number" id="hoa1" placeholder="e.g., 200">
+      
+      <label>Insurance per Month:</label>
+      <input type="number" id="ins1" placeholder="e.g., 100">
+      
+      <label>Vacancy/Turnover Loss (%):</label>
+      <input type="number" id="vac1" placeholder="e.g., 10">
+      
+      <label>Monthly Rent:</label>
+      <input type="number" id="rent1" placeholder="e.g., 1500">
+      
+      <label>Property Appreciation Rate (% per year):</label>
+      <input type="number" id="appreciation1" placeholder="e.g., 2">
+      
+      <label>Rental Period (years):</label>
+      <input type="number" id="rentalYears1" placeholder="e.g., 30">
+      
+      <button onclick="calculateCalculator('1')">Calculate</button>
+      <div class="result" id="result1"></div>
+    </div>
+    
+    <div class="calculator" id="calc2">
+      <h2>House 2</h2>
+      <label>House Price:</label>
+      <input type="number" id="price2" placeholder="e.g., 350000">
+      
+      <label>Down Payment:</label>
+      <input type="number" id="down2" placeholder="e.g., 70000">
+      
+      <label>Mortgage Annual Interest Rate (%):</label>
+      <input type="number" id="rate2" placeholder="e.g., 4.5">
+      
+      <label>Mortgage Term (years):</label>
+      <input type="number" id="term2" placeholder="e.g., 30">
+      
+      <label>Sales Tax (%):</label>
+      <input type="number" id="tax2" placeholder="e.g., 1.5">
+      
+      <label>HOA per Month:</label>
+      <input type="number" id="hoa2" placeholder="e.g., 250">
+      
+      <label>Insurance per Month:</label>
+      <input type="number" id="ins2" placeholder="e.g., 120">
+      
+      <label>Vacancy/Turnover Loss (%):</label>
+      <input type="number" id="vac2" placeholder="e.g., 10">
+      
+      <label>Monthly Rent:</label>
+      <input type="number" id="rent2" placeholder="e.g., 1600">
+      
+      <label>Property Appreciation Rate (% per year):</label>
+      <input type="number" id="appreciation2" placeholder="e.g., 2">
+      
+      <label>Rental Period (years):</label>
+      <input type="number" id="rentalYears2" placeholder="e.g., 30">
+      
+      <button onclick="calculateCalculator('2')">Calculate</button>
+      <div class="result" id="result2"></div>
+    </div>
+  </div>
+  
+  <button onclick="compareCalculators()">Compare Houses</button>
+  <div class="result" id="compareResult"></div>
+  
+  <script>
+    // Restore saved values and attach oninput listeners to store them.
+    window.onload = function() {
+      var inputs = document.querySelectorAll("input");
+      inputs.forEach(function(input) {
+        var saved = localStorage.getItem(input.id);
+        if(saved !== null) {
+          input.value = saved;
+        }
+        input.addEventListener("input", function() {
+          localStorage.setItem(input.id, input.value);
+        });
+      });
+    };
+
+    function calculateCalculator(id) {
+      // Get input values for calculator (either "1" or "2")
+      var price = parseFloat(document.getElementById('price' + id).value);
+      var down = parseFloat(document.getElementById('down' + id).value);
+      var rate = parseFloat(document.getElementById('rate' + id).value);
+      var term = parseFloat(document.getElementById('term' + id).value);
+      var tax = parseFloat(document.getElementById('tax' + id).value);
+      var hoa = parseFloat(document.getElementById('hoa' + id).value);
+      var ins = parseFloat(document.getElementById('ins' + id).value);
+      var vac = parseFloat(document.getElementById('vac' + id).value);
+      var rent = parseFloat(document.getElementById('rent' + id).value);
+      var appreciation = parseFloat(document.getElementById('appreciation' + id).value);
+      var rentalYears = parseFloat(document.getElementById('rentalYears' + id).value);
+      
+      // Validate inputs
+      if(isNaN(price) || isNaN(down) || isNaN(rate) || isNaN(term) || isNaN(tax) ||
+         isNaN(hoa) || isNaN(ins) || isNaN(vac) || isNaN(rent) || isNaN(appreciation) || isNaN(rentalYears)){
+        alert("Please fill in all fields with valid numbers.");
+        return;
+      }
+      
+      // Mortgage Calculation
+      var loan = price - down;
+      var monthlyRate = rate / 100 / 12;
+      var nPayments = term * 12;
+      var mortgagePayment = (loan * monthlyRate * Math.pow(1 + monthlyRate, nPayments)) / 
+                            (Math.pow(1 + monthlyRate, nPayments) - 1);
+      
+
+      // Sales Tax Cost
+      var salesTaxCost = price * (tax / 100);
+      var salesTaxCostPerMonth = salesTaxCost / 12;
+      
+      // Rental Income Calculation
+      var effectiveRent = rent * (1 - (vac / 100));
+      var netMonthlyIncome = effectiveRent - hoa - ins - mortgagePayment - salesTaxCostPerMonth;
+      var annualNetIncome = netMonthlyIncome * 12;
+      var totalMortgagePayments = mortgagePayment * 12 * rentalYears;
+      // var rentalProfit = (annualNetIncome * rentalYears) - totalMortgagePayments;
+      var rentalProfit = annualNetIncome * rentalYears;
+      
+      // Property Appreciation Calculation
+      var futureValue = price * Math.pow(1 + (appreciation / 100), rentalYears);
+      var equityGain = futureValue - price;
+      
+      // Total Profit and ROI
+      var totalProfit = rentalProfit + equityGain;
+      var initialInvestment = down + salesTaxCost;
+      var roi = (totalProfit / initialInvestment) * 100;
+      
+      // Save results globally for comparison
+      window['calcResult' + id] = {
+        mortgagePayment: mortgagePayment,
+        netMonthlyIncome: netMonthlyIncome,
+        rentalProfit: rentalProfit,
+        equityGain: equityGain,
+        totalProfit: totalProfit,
+        roi: roi
+      };
+      
+      // Display results for the calculator
+      document.getElementById('result' + id).innerHTML =
+        "<strong>Adjusted rent income (Monthly):</strong> $" + effectiveRent.toFixed(2) + "<br>" +
+        "<strong>Net Income (Monthly):</strong> $" + netMonthlyIncome.toFixed(2) + "<br><br>" +
+        
+        "<strong>Mortgage Payment (Monthly):</strong> $" + mortgagePayment.toFixed(2) + "<br>" +
+        "<strong>HOA (Monthly):</strong> $" + hoa.toFixed(2) + "<br>" +
+        "<strong>insurance (Monthly):</strong> $" + ins.toFixed(2) + "<br>" +
+        "<strong>Sales tax (Monthly):</strong> $" + salesTaxCostPerMonth.toFixed(2) + "<br><br>" +
+        "<strong>Rental Profit (Over Period):</strong> $" + rentalProfit.toFixed(2) + "<br>" +
+        "<strong>Equity Gain:</strong> $" + equityGain.toFixed(2) + "<br>" +
+        "<strong>Total Profit:</strong> $" + totalProfit.toFixed(2) + "<br>" +
+        "<strong>Return on investment (ROI):</strong> " + roi.toFixed(2) + "%";
+    }
+    
+    function compareCalculators() {
+      if(!window.calcResult1 || !window.calcResult2) {
+        alert("Please calculate both houses first.");
+        return;
+      }
+      
+      var res1 = window.calcResult1;
+      var res2 = window.calcResult2;
+      var compareText = "";
+      
+      if(res1.totalProfit > res2.totalProfit) {
+        compareText += "House 1 has a higher total profit.<br>";
+      } else if(res1.totalProfit < res2.totalProfit) {
+        compareText += "House 2 has a higher total profit.<br>";
+      } else {
+        compareText += "Both houses have the same total profit.<br>";
+      }
+      
+      if(res1.roi > res2.roi) {
+        compareText += "House 1 has a higher ROI.<br>";
+      } else if(res1.roi < res2.roi) {
+        compareText += "House 2 has a higher ROI.<br>";
+      } else {
+        compareText += "Both houses have the same ROI.<br>";
+      }
+      
+      document.getElementById('compareResult').innerHTML = compareText;
+    }
+  </script>
+</body>
+</html>
