@@ -204,6 +204,7 @@
       // Total Profit and ROI
       var totalProfit = rentalProfit + equityGain;
       var totalProfitClean = totalProfit - upgradeCosts - mortgageClosingCosts;
+      var totalProfitFromRentClean = rentalProfit - upgradeCosts - mortgageClosingCosts;
       var initialInvestment = down + salesTaxCost;
       var roi = (totalProfitClean / initialInvestment) * 100;
 
@@ -213,6 +214,7 @@
         mortgageClosingCosts: mortgageClosingCosts,
         netMonthlyIncome: netMonthlyIncome,
         rentalProfit: rentalProfit,
+        totalProfitFromRentClean: totalProfitFromRentClean,
         equityGain: equityGain,
         totalProfit: totalProfit,
         totalProfitClean: totalProfitClean,
@@ -235,7 +237,8 @@
 
         "<strong>Rental Profit (Over Period):</strong> $" + rentalProfit.toFixed(2) + "<br>" +
         "<strong>Equity Gain:</strong> $" + equityGain.toFixed(2) + "<br>" +
-        "<strong>Total Profit (one time expenses not subtracted):</strong> $" + totalProfit.toFixed(2) + "<br><br>" +
+        "<strong>Total Profit (one time expenses not subtracted):</strong> $" + totalProfit.toFixed(2) + "<br>" +
+        "<strong>Total Profit only from rent:</strong> $" + totalProfitFromRentClean.toFixed(2) + "<br><br>" +
         "<strong>Total Profit:</strong> $" + totalProfitClean.toFixed(2) + "<br>" +
         "<strong>Return on investment (ROI):</strong> " + roi.toFixed(2) + "%";
     }
