@@ -100,6 +100,9 @@
       <label>Monthly Rent:</label>
       <input type="number" id="rent1" placeholder="e.g., 1500">
       
+      <label>Upgrade costs (one time):</label>
+      <input type="number" id="upgrade1" placeholder="e.g., 1500" value="0">
+
       <button onclick="calculateCalculator('1')">Calculate</button>
       <div class="result" id="result1"></div>
     </div>
@@ -121,6 +124,9 @@
       <label>Monthly Rent:</label>
       <input type="number" id="rent2" placeholder="e.g., 1600">
       
+      <label>Upgrade costs (one time):</label>
+      <input type="number" id="upgrade2" placeholder="e.g., 1500" value="0">
+
       <button onclick="calculateCalculator('2')">Calculate</button>
       <div class="result" id="result2"></div>
     </div>
@@ -160,7 +166,7 @@
       var hoa = parseFloat(document.getElementById('hoa' + id).value);
       var ins = parseFloat(document.getElementById('ins' + id).value);
       var rent = parseFloat(document.getElementById('rent' + id).value);
-      
+      var upgradeCosts = parseFloat(document.getElementById('upgrade' + id).value);
 
       // Validate inputs
       if(isNaN(price) || isNaN(down) || isNaN(rate) || isNaN(term) || isNaN(tax) ||
@@ -193,21 +199,24 @@
       var futureValue = price * Math.pow(1 + (appreciation / 100), rentalYears);
       var equityGain = futureValue - price;
       
+      var mortgageClosingCosts = mortgageClosingCostsPers / 100 * loan;
+
       // Total Profit and ROI
       var totalProfit = rentalProfit + equityGain;
+      var totalProfitClean = totalProfit - upgradeCosts - mortgageClosingCosts;
       var initialInvestment = down + salesTaxCost;
-      var roi = (totalProfit / initialInvestment) * 100;
-      
-      var mortgageClosingCosts = mortgageClosingCostsPers / 100 * loan;
+      var roi = (totalProfitClean / initialInvestment) * 100;
 
       // Save results globally for comparison
       window['calcResult' + id] = {
         mortgagePayment: mortgagePayment,
+        mortgageClosingCosts: mortgageClosingCosts,
         netMonthlyIncome: netMonthlyIncome,
         rentalProfit: rentalProfit,
         equityGain: equityGain,
         totalProfit: totalProfit,
-        roi: roi
+        totalProfitClean: totalProfitClean,
+        roi: roi,
       };
       
       // Display results for the calculator
@@ -220,12 +229,14 @@
         "<strong>insurance (Monthly):</strong> $" + ins.toFixed(2) + "<br>" +
         "<strong>Sales tax (Monthly):</strong> $" + salesTaxCostPerMonth.toFixed(2) + "<br><br>" +
 
-        "<strong>Mortgage closing costs (one time):</strong> $" + mortgageClosingCosts.toFixed(2) + "<br><br>" +
-
+        "<strong style='color:red'>One time additional costs ($" + (mortgageClosingCosts + upgradeCosts).toFixed(2) +"):</strong><br>" +
+        "<strong>- Mortgage closing costs:</strong> $" + mortgageClosingCosts.toFixed(2) + "<br>" +
+        "<strong>- Upgrade costs:</strong> $" + upgradeCosts.toFixed(2) + "<br><br>" +
 
         "<strong>Rental Profit (Over Period):</strong> $" + rentalProfit.toFixed(2) + "<br>" +
         "<strong>Equity Gain:</strong> $" + equityGain.toFixed(2) + "<br>" +
-        "<strong>Total Profit:</strong> $" + totalProfit.toFixed(2) + "<br>" +
+        "<strong>Total Profit (one time expenses not subtracted):</strong> $" + totalProfit.toFixed(2) + "<br><br>" +
+        "<strong>Total Profit:</strong> $" + totalProfitClean.toFixed(2) + "<br>" +
         "<strong>Return on investment (ROI):</strong> " + roi.toFixed(2) + "%";
     }
     
